@@ -2,6 +2,7 @@
 import { LoginSchema } from "@/types/types";
 import { signIn } from "@/auth";
 import z from "zod";
+import { AuthError } from "next-auth";
 
 export async function loginFunction(data: z.infer<typeof LoginSchema>) {
   try {
@@ -13,6 +14,9 @@ export async function loginFunction(data: z.infer<typeof LoginSchema>) {
 
     return "Login successful";
   } catch (error: any) {
-    return  error?.cause?.err?.message || "Login failed";
+    if (error instanceof AuthError) {
+      return error?.cause?.err?.message || "Something went wrong..";
+    }
+    return "Login failed";
   }
 }

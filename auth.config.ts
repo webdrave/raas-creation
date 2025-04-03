@@ -3,7 +3,8 @@ import Credentials from "next-auth/providers/credentials";
 import { LoginSchema } from "./types/types";
 import { prisma } from "./lib/prisma-client";
 import bcryptjs from "bcryptjs";
-import { NextAuthOptions } from "next-auth";
+import { AuthError } from "next-auth";
+import type { NextAuthConfig } from "next-auth";
 
 export default {
   providers: [
@@ -16,6 +17,11 @@ export default {
       authorize: async (credentials: any) => {
         console.log("Credentials Received.✅", credentials);
 
+        if (!process.env.NEXTAUTH_SECRET) {
+          console.log("❌ NEXTAUTH_SECRET ENV NODE FOUND:");
+          throw new Error("Internal Server Error -{ENV}") as AuthError;
+        }
+
         const { mobileNumber, password } = credentials;
         const { data, success, error } = LoginSchema.safeParse({
           mobileNumber,
@@ -24,7 +30,7 @@ export default {
 
         if (!success || error) {
           console.error("❌ Validation Failed:", data);
-          throw new Error("Required fields missing");
+          throw new Error("Required fields missing") as AuthError;
         }
 
         console.log("Validation Passed: ✅", data);
@@ -35,12 +41,12 @@ export default {
 
         if (!user) {
           console.error("❌ User Not Found");
-          throw new Error("Invalid credentials or user not found");
+          throw new Error("Invalid credentials or user not found") as AuthError;
         }
 
         if (!user.password) {
           console.error("❌ User Signed Up with Social Media");
-          throw new Error("User Signed Up with Social Media");
+          throw new Error("User Signed Up with Social Media") as AuthError;
         }
 
         const isPasswordValid = await bcryptjs.compare(
@@ -51,7 +57,9 @@ export default {
 
         if (!isPasswordValid) {
           console.log("❌ Invalid Password");
-          throw new Error("Invalid credentials or user not found.");
+          throw new Error(
+            "Invalid credentials or user not found."
+          ) as AuthError;
         }
 
         console.log("✅ Authentication Successful");
@@ -94,4 +102,4 @@ export default {
   },
 
   secret: process.env.NEXTAUTH_SECRET,
-} satisfies NextAuthOptions;
+} satisfies NextAuthConfig;
