@@ -155,10 +155,9 @@ export default function LoginPage() {
                         value={field.value}
                         onChange={(phone) => onChange(phone)}
                         disabled={isLoading}
-                        inputClass="!w-full !px-10 !py-3 !border !border-gray-300 !rounded-lg !focus:outline-none !focus:ring-2 !focus:ring-[#a08452] !focus:border-transparent"
-                        buttonClass="!bg-[#a08452] !rounded-lg !border-0"
-                        dropdownClass="!bg-white !text-black"
-                        searchClass="!bg-white !text-gray-900"
+                        inputClass="!w-full px-10 !py-3 !border !border-gray-300 !rounded-lg !focus:outline-none !focus:ring-2 !focus:ring-[#a08452] !focus:border-transparent"
+                        buttonClass="!bg-[#a08452] hover:!bg-[#8c703d] !rounded-lg !border-0 !transition-colors !duration-200"
+                        dropdownClass="!bg-white !text-gray-900 !shadow-lg !rounded-lg !border !border-gray-100"                        searchClass="!bg-white !text-gray-900"
                         inputProps={{
                           required: true,
                           placeholder: "Enter your mobile number",

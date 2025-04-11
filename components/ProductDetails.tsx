@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type React from "react";
 
 import Image from "next/image";
@@ -23,11 +23,11 @@ import SiteFooter from "@/components/site-footer";
 import { useParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { productApi } from "@/lib/api/productdetails";
+import { Products } from "./admin/products-table";
 
-export default function ProductDetailPage() {
+export default function ProductDetails({slug} : {slug: string}) {
   const { toast } = useToast();
   const { addToCart } = useCart();
-  const { id } = useParams();
   const [selectedColor, setSelectedColor] = useState("orange");
   const [selectedSize, setSelectedSize] = useState("40");
   const [quantity, setQuantity] = useState(1);
@@ -36,11 +36,7 @@ export default function ProductDetailPage() {
   const [reviewName, setReviewName] = useState("");
   const [reviewEmail, setReviewEmail] = useState("");
   const [reviewText, setReviewText] = useState("");
-
-  if(!id){
-    console.log("ERROR ID IS NOT CORRECT")
-    return null;
-  }
+  const [product, setProduct] = useState<Products | null>(null);
 
   const decreaseQuantity = () => {
     if (quantity > 1) {
@@ -64,12 +60,16 @@ export default function ProductDetailPage() {
   };
 
   const handleAddToCart = () => {
+
+    if(!product){
+      return;
+    }
     // Add item to cart
     addToCart({
-      id : id as string,
-      name: product?.name,
-      price: product?.discount,
-      originalPrice: product?.price,
+      id : product.id,
+      name: product.name,
+      price: product.discountPrice ?? product.price,
+      originalPrice: product.price,
       quantity: quantity,
       color: selectedColor,
       size: selectedSize,
@@ -82,11 +82,6 @@ export default function ProductDetailPage() {
       description: `${product?.name} has been added to your cart.`,
     });
   };
-
-  const { data:product, isLoading } = useQuery({
-    queryKey: ["product", id],
-    queryFn: ({ queryKey }) => productApi.getById(queryKey[1] as string),
-  })
 
   // Mock customer reviews
   const customerReviews = [
@@ -140,6 +135,36 @@ export default function ProductDetailPage() {
       image: "/image 100.png?height=300&width=250",
     },
   ];
+  
+  const { data, isLoading, error } = useQuery({
+    queryKey: ["product", slug],
+    queryFn: async () => {
+      try {
+        const res = await productApi.getBySlug(slug);
+        return res;
+      } catch (err) {
+        throw new Error("Failed to fetch product");
+      }
+    },
+  });
+  
+  useEffect(() => {
+    if (data) {
+      setProduct(data);
+    }
+  }, [data]);
+  if(error) {
+    return <div>Error loading product</div>;
+  }
+
+  if(isLoading){
+    return <div>Loading...</div>;
+  }
+
+  if(!data){
+    return <div>Product not found</div>;
+  }
+
 
   return (
     <main className="min-h-screen bg-white">
@@ -209,7 +234,7 @@ export default function ProductDetailPage() {
             {/* Price */}
             <div className="flex items-center mb-6">
               <span className="text-xl font-medium">
-                ₹{product?.discount?.toFixed(2)}
+                ₹{product?.discountPrice?.toFixed(2)}
               </span>
               <span className="ml-2 text-gray-500 line-through">
                 ₹{product?.price.toFixed(2)}
@@ -355,11 +380,6 @@ export default function ProductDetailPage() {
                       </div>
                     ))}
                   </div> */}
-                </div>
-
-                <div>
-                  <h3 className="text-sm font-medium mb-2">Material</h3>
-                  <p>Mid Cotton</p>
                 </div>
 
                 <div>

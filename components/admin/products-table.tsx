@@ -37,6 +37,7 @@ export interface Products extends Product {
   stock: number;
   category: string;
   id: string;
+  slug: string;
   assets: {
     type: "IMAGE" | "VIDEO";
     asset_url: string;

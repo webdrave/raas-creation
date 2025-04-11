@@ -7,6 +7,10 @@ export const productApi = {
     const response = await apiClient.get("/api/products");
     return response.data.products;
   },
+  getBySlug: async (slug: string): Promise<Products> => {
+    const response = await apiClient.get(`/api/products/slug/${slug}`);
+    return response.data.product;
+  },
   getProducts: async (
     currentPage: number,
     itemsPerPage: number,

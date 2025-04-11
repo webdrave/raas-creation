@@ -6,16 +6,18 @@ import { InventoryAlerts } from "@/components/admin/inventory-alerts";
 
 export default function AdminDashboard() {
   return (
-      <div className="p-6">
-        <DashboardHeader />
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+    <>
+      <DashboardHeader />
+      <div className="grid grid-cols-1 gap-6 mt-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <ProductOverview />
           <InventoryAlerts />
         </div>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <TopSellingProducts />
           <RecentOrders />
         </div>
       </div>
+    </>
   );
 }

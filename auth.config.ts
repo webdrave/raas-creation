@@ -39,6 +39,8 @@ export default {
           where: { mobile_no: data.mobileNumber },
         });
 
+        console.log("🔍 User Found:", user);
+
         if (!user) {
           console.error("❌ User Not Found");
           throw new Error("Invalid credentials or user not found") as AuthError;
@@ -84,7 +86,6 @@ export default {
         token.mobile_no = user.mobile_no;
         token.role = user.role; // Store user role
       }
-      token.role = "ADMIN"
       return token;
     },
 

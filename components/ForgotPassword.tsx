@@ -12,7 +12,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useForgotPassword } from "@/app/forgot-password/hooks/hooks";
 import toast from "react-hot-toast";

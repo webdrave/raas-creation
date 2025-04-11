@@ -25,14 +25,12 @@ export function EditProductForm({ productId }: { productId: string }) {
   const router = useRouter();
 
   const Sizes = [
-    "SIZE_5",
-    "SIZE_6",
-    "SIZE_7",
-    "SIZE_8",
-    "SIZE_9",
-    "SIZE_10",
-    "SIZE_11",
-    "SIZE_12",
+    "SIZE_36",
+    "SIZE_38",
+    "SIZE_40",
+    "SIZE_42",
+    "SIZE_44",
+    "SIZE_46",
   ];
 
   interface Variant {
@@ -61,7 +59,6 @@ export function EditProductForm({ productId }: { productId: string }) {
     variants: "",
     images: "",
     category: "",
-    material: "",
   });
 
   const [product, setProduct] = useState<Product>({
@@ -70,7 +67,6 @@ export function EditProductForm({ productId }: { productId: string }) {
     price: 0,
     discountPrice: 0,
     category_id: "",
-    material: "",
     assets: [],
     status: "DRAFT",
   });
@@ -83,7 +79,6 @@ export function EditProductForm({ productId }: { productId: string }) {
       variants: "",
       images: "",
       category: "",
-      material: "",
     };
     if (!product.name.trim()) {
       newErrors.name = "Product name is required";
@@ -105,9 +100,6 @@ export function EditProductForm({ productId }: { productId: string }) {
       newErrors.category = "Please select a category";
     }
 
-    if (!product.material.trim()) {
-      newErrors.material = "Please select a material";
-    }
 
     if (variants.length > 0) {
       const hasInvalidVariant = variants.some(
@@ -144,7 +136,6 @@ export function EditProductForm({ productId }: { productId: string }) {
         description: data.description,
         price: data.price,
         category_id: data.category_id,
-        material: data.material,
         status: data.status,
         discountPrice: data.discountPrice ?? 1,
         assets: data.assets?.map(
@@ -202,10 +193,41 @@ export function EditProductForm({ productId }: { productId: string }) {
         images: [],
         sizes: [
           {
-            id: crypto.randomUUID(),
-            name: "SIZE_5",
+            id: cuid(),
+            name: "SIZE_36",
             quantity: 0,
-            isNew: true,
+            isNew: true
+          },
+          {
+            id: cuid(),
+            name: "SIZE_38",
+            quantity: 0,
+            isNew: true
+
+          },
+          {
+            id: cuid(),
+            name: "SIZE_40",
+            quantity: 0,
+            isNew: true
+          },
+          {
+            id: cuid(),
+            name: "SIZE_42",
+            quantity: 0,
+            isNew: true
+          },
+          {
+            id: cuid(),
+            name: "SIZE_44",
+            quantity: 0,
+            isNew: true
+          },
+          {
+            id: cuid(),
+            name: "SIZE_46",
+            quantity: 0,
+            isNew: true
           },
         ],
         isOpen: true,
@@ -222,7 +244,7 @@ export function EditProductForm({ productId }: { productId: string }) {
             ...variant,
             sizes: [
               ...variant.sizes,
-              { id: cuid(), name: "", quantity: 0, isNew: true },
+              { id: cuid(), name: "SIZE_36", quantity: 0, isNew: true },
             ],
           };
         }
@@ -357,14 +379,12 @@ export function EditProductForm({ productId }: { productId: string }) {
               assets: variant.images,
               sizes: variant.sizes.map((size) => ({
                 size: size.name as
-                  | "SIZE_5"
-                  | "SIZE_6"
-                  | "SIZE_7"
-                  | "SIZE_8"
-                  | "SIZE_9"
-                  | "SIZE_10"
-                  | "SIZE_11"
-                  | "SIZE_12",
+                "SIZE_36"
+                | "SIZE_38"
+                | "SIZE_40"
+                | "SIZE_42"
+                | "SIZE_44"
+                | "SIZE_46",
                 stock: size.quantity,
               })),
             });
@@ -381,14 +401,12 @@ export function EditProductForm({ productId }: { productId: string }) {
               if (size.isNew) {
                 newSizes.push({
                   size: size.name as
-                    | "SIZE_5"
-                    | "SIZE_6"
-                    | "SIZE_7"
-                    | "SIZE_8"
-                    | "SIZE_9"
-                    | "SIZE_10"
-                    | "SIZE_11"
-                    | "SIZE_12",
+                  "SIZE_36"
+                  | "SIZE_38"
+                  | "SIZE_40"
+                  | "SIZE_42"
+                  | "SIZE_44"
+                  | "SIZE_46",
                   stock: size.quantity,
                 });
               } else {
@@ -905,23 +923,7 @@ export function EditProductForm({ productId }: { productId: string }) {
               )}
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Material
-              </label>
-              <input
-                type="text"
-                className="w-full px-3 py-2 bg-white border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#4f507f] text-sm"
-                placeholder="Enter material"
-                value={product.material}
-                onChange={(e) =>
-                  setProduct({ ...product, material: e.target.value })
-                }
-              />
-              {errors.material && (
-                <p className="text-red-500 text-xs mt-1">{errors.material}</p>
-              )}
-            </div>
+            
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">

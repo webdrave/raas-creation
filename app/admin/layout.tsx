@@ -9,7 +9,6 @@ import { Bell } from "lucide-react"
 import QueryProvider from "@/lib/queryclient"
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 
-
 export default function AdminLayout({
   children,
 }: {
@@ -19,22 +18,28 @@ export default function AdminLayout({
 
   return (
     <QueryProvider>
-    <div className="flex min-h-screen bg-[#f9f9fa]">
-      <Sidebar />
-      <main className="flex-1 overflow-auto relative">
-        <div className="absolute top-4 right-16 xl:right-4 z-10">
-          <button
-            onClick={() => setIsNotificationSidebarOpen(!isNotificationSidebarOpen)}
-            className="p-2 bg-white rounded-full shadow-md hover:bg-gray-100 transition-colors"
-          >
-            <Bell size={20} />
-          </button>
+      <div className="flex min-h-screen bg-[#f9f9fa]">
+        {/* Apply the no-scrollbar class to the sidebar wrapper */}
+        <div className="overflow-hidden">
+          <Sidebar />
         </div>
-        {children}
-      </main>
-      {/* <NotificationSidebar isOpen={isNotificationSidebarOpen} onClose={() => setIsNotificationSidebarOpen(false)} /> */}
-    </div>
-    <ReactQueryDevtools initialIsOpen={false} />
+        <main className="flex-1 overflow-auto">
+          <div className="sticky top-0 z-10 bg-white shadow-sm p-4 flex justify-between items-center">
+            <h1 className="text-xl font-semibold text-gray-800">Admin Dashboard</h1>
+            <button
+              onClick={() => setIsNotificationSidebarOpen(!isNotificationSidebarOpen)}
+              className="p-2 bg-white rounded-full shadow-md hover:bg-gray-100 transition-colors"
+            >
+              <Bell size={20} />
+            </button>
+          </div>
+          <div className="p-6">
+            {children}
+          </div>
+        </main>
+        {/* <NotificationSidebar isOpen={isNotificationSidebarOpen} onClose={() => setIsNotificationSidebarOpen(false)} /> */}
+      </div>
+      <ReactQueryDevtools initialIsOpen={false} />
     </QueryProvider>
   )
 }

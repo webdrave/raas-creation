@@ -24,6 +24,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { productApi } from "@/lib/api/productdetails";
+import { Products } from "@/components/admin/products-table";
 
 export default function ShopPage() {
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
@@ -320,12 +321,12 @@ export default function ShopPage() {
 }
 
 // ProductCard component remains the same as in the original code
-function ProductCard({ product }) {
+function ProductCard({ product }: { product: Products }) {
   // (Original ProductCard implementation)
   return (
     <div className="group relative">
       <div className="aspect-[3/4] relative overflow-hidden rounded-xl bg-gray-100">
-        <Link href={`/shop/product/${product.id}`}>
+        <Link href={`/product/${product.slug}`}>
           <Image
             src={product.assets[0].asset_url || "/placeholder.svg"}
             alt={product.name}
@@ -355,11 +356,11 @@ function ProductCard({ product }) {
         </div>
       </div>
       <div className="mt-3">
-        <Link href={`/shop/product/${product.id}`} className="block">
+        <Link href={`/shop/product/${product.slug}`} className="block">
           <h3 className="text-sm font-medium">{product.name}</h3>
         </Link>
         <div className="flex items-center mt-1">
-          <span className="text-sm font-medium">₹{product.discount}</span>
+          <span className="text-sm font-medium">₹{product.discountPrice}</span>
           <span className="text-xs text-gray-500 line-through ml-2">
             ₹{product.price}
           </span>

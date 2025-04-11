@@ -22,6 +22,7 @@ import {
   ChevronLeft,
   Menu,
   X,
+  Box,
 } from "lucide-react";
 import { signOut } from "next-auth/react";
 
@@ -56,8 +57,7 @@ export function Sidebar() {
       {isMobile && (
         <button
           className="fixed top-4 right-4 z-50 bg-white p-2 rounded-md shadow-md"
-          onClick={() => setIsCollapsed(!isCollapsed)}
-        >
+          onClick={() => setIsCollapsed(!isCollapsed)}>
           {isCollapsed ? <Menu size={20} /> : <X size={20} />}
         </button>
       )}
@@ -78,16 +78,16 @@ export function Sidebar() {
             : isMobile
             ? "w-[260px] shadow-xl"
             : "w-[220px]"
-        } ${isCollapsed && isMobile ? "translate-x-[-100%]" : "translate-x-0"}`}
-      >
+        } ${
+          isCollapsed && isMobile ? "translate-x-[-100%]" : "translate-x-0"
+        }`}>
         <div className="p-4 border-b border-gray-200 flex items-center gap-2 font-semibold">
           <span className="h-6 w-6 rounded-full bg-[#4f507f] flex-shrink-0"></span>
-          {!isCollapsed && <span>Arvan</span>}
+          {!isCollapsed && <span>RAAS</span>}
           {!isMobile && (
             <button
               className="ml-auto text-gray-500 hover:text-gray-700"
-              onClick={() => setIsCollapsed(!isCollapsed)}
-            >
+              onClick={() => setIsCollapsed(!isCollapsed)}>
               {isCollapsed ? (
                 <ChevronRight size={18} />
               ) : (
@@ -107,12 +107,17 @@ export function Sidebar() {
                 collapsed={isCollapsed}
               />
               <div
-                onClick={() => signOut({redirectTo:"/"})}
+                onClick={() =>
+                  signOut({ redirectTo: `${process.env.NEXT_PUBLIC_FRONTEND_URL}/`, callbackUrl: "/signin" })
+                }
                 className={`flex cursor-pointer items-center gap-2 px-2 py-1.5 rounded-md text-sm transition-all text-gray-700 hover:bg-gray-100 ${
                   isCollapsed ? "justify-center" : ""
-                }`}
-              >
-                <div className="flex-shrink-0">
+                }`}>
+                <div
+                  onClick={() =>
+                    signOut({ redirectTo: `${process.env.NEXT_PUBLIC_FRONTEND_URL}/`,callbackUrl: "/signin" })
+                  }
+                  className="flex-shrink-0">
                   <LogOut size={18} />
                 </div>
                 {!isCollapsed && <span>Logout</span>}
@@ -131,7 +136,7 @@ export function Sidebar() {
               />
               <NavItem
                 href="/admin/products"
-                icon={<LogOut size={18} />}
+                icon={<Box size={18} />}
                 label="Products"
                 active={isActive("/admin/products")}
                 collapsed={isCollapsed}
@@ -266,8 +271,7 @@ export function Sidebar() {
             : isMobile
             ? "ml-0"
             : "ml-[64px]"
-        }`}
-      >
+        }`}>
         {/* Your main content goes here */}
       </div>
     </>
@@ -295,8 +299,7 @@ function NavItem({
           ? "bg-[#edeefc] text-[#4f507f] font-medium"
           : "text-gray-700 hover:bg-gray-100"
       } ${collapsed ? "justify-center" : ""}`}
-      title={collapsed ? label : ""}
-    >
+      title={collapsed ? label : ""}>
       <div className="flex-shrink-0">{icon}</div>
       {!collapsed && <span>{label}</span>}
     </Link>

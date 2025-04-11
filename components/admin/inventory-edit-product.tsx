@@ -20,14 +20,12 @@ interface Size {
 
 // Available sizes for selection
 const availableSizes = [
-  "SIZE_6",
-  "SIZE_7",
-  "SIZE_8",
-  "SIZE_9",
-  "SIZE_10",
-  "SIZE_11",
-  "SIZE_12",
-  "SIZE_13",
+  "SIZE_36",
+  "SIZE_38",
+  "SIZE_40",
+  "SIZE_42",
+  "SIZE_44",
+  "SIZE_46",
 ];
 
 export function ProductInventoryEditor({ productId }: { productId: string }) {

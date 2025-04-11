@@ -6,7 +6,6 @@ export const product = z.object({
     price: z.number().positive("Price must be a positive number"),
     discountPrice: z.number().positive("Discount Prize must be a positive number").optional(),
     category_id: z.string().cuid("Invalid category ID"),
-    material: z.string().min(1, "Material is required"),
     assets: z
       .array(
         z.object({
@@ -16,6 +15,7 @@ export const product = z.object({
       )
       .optional(),
     status: z.enum(['DRAFT', 'PUBLISHED']),
+    sku: z.string().min(1, "SKU is required").optional(),
   });
 
 export const varient = z.object({

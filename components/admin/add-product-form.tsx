@@ -22,14 +22,12 @@ export function AddProductForm() {
   const router = useRouter();
 
   const Sizes = [
-    "SIZE_5",
-    "SIZE_6",
-    "SIZE_7",
-    "SIZE_8",
-    "SIZE_9",
-    "SIZE_10",
-    "SIZE_11",
-    "SIZE_12",
+    "SIZE_36",
+    "SIZE_38",
+    "SIZE_40",
+    "SIZE_42",
+    "SIZE_44",
+    "SIZE_46",
   ];
 
   interface Variant {
@@ -55,7 +53,8 @@ export function AddProductForm() {
     variants: "",
     images: "",
     category: "",
-    material: "",
+    status: "",
+    sku: "",
   });
 
   const [product, setProduct] = useState<Product>({
@@ -64,9 +63,9 @@ export function AddProductForm() {
     price: 0,
     discountPrice: 1,
     category_id: "",
-    material: "",
     assets: [],
     status: "DRAFT",
+    sku: "",
   });
 
   const validateProduct = () => {
@@ -77,7 +76,8 @@ export function AddProductForm() {
       variants: "",
       images: "",
       category: "",
-      material: "",
+      status: "",
+      sku: "",
     };
     if (!product.name.trim()) {
       newErrors.name = "Product name is required";
@@ -95,12 +95,19 @@ export function AddProductForm() {
       newErrors.images = "At least one product image is required";
     }
 
-    if (!product.category_id.trim()) {
-      newErrors.category = "Please select a category";
+    if (!product.status.trim()) {
+      newErrors.status = "Please select a status";
+    }
+    if (!product.sku?.trim()) {
+      newErrors.sku = "SKU is required";
     }
 
-    if (!product.material.trim()) {
-      newErrors.material = "Please select a material";
+    if (!product.sku) {
+      newErrors.sku = "SKU is required";
+    }
+
+    if (!product.category_id.trim()) {
+      newErrors.category = "Please select a category";
     }
 
     if (variants.length > 0) {
@@ -130,7 +137,32 @@ export function AddProductForm() {
         sizes: [
           {
             id: cuid(),
-            name: "SIZE_5",
+            name: "SIZE_36",
+            quantity: 0,
+          },
+          {
+            id: cuid(),
+            name: "SIZE_38",
+            quantity: 0,
+          },
+          {
+            id: cuid(),
+            name: "SIZE_40",
+            quantity: 0,
+          },
+          {
+            id: cuid(),
+            name: "SIZE_42",
+            quantity: 0,
+          },
+          {
+            id: cuid(),
+            name: "SIZE_44",
+            quantity: 0,
+          },
+          {
+            id: cuid(),
+            name: "SIZE_46",
             quantity: 0,
           },
         ],
@@ -145,7 +177,7 @@ export function AddProductForm() {
         if (variant.id === variantId) {
           return {
             ...variant,
-            sizes: [...variant.sizes, { id: cuid(), name: "", quantity: 0 }],
+            sizes: [...variant.sizes, { id: cuid(), name: "SIZE_36", quantity: 0 }],
           };
         }
         return variant;
@@ -171,14 +203,17 @@ export function AddProductForm() {
     );
   };
 
-  const handleAddVarientImage = (Urls : string[]) => {
+  const handleAddVarientImage = (Urls: string[]) => {
     // In a real app, this would open a file picker
     setVariants(
       variants.map((variant) => {
         if (variant.id === varientId) {
           return {
             ...variant,
-            images: [...variant.images, ...Urls.map((url) => ({ url, type: "IMAGE" as const }))],
+            images: [
+              ...variant.images,
+              ...Urls.map((url) => ({ url, type: "IMAGE" as const })),
+            ],
           };
         }
         return variant;
@@ -208,10 +243,13 @@ export function AddProductForm() {
     queryFn: () => categoryApi.getAll(),
   });
 
-  const handleAddImage = (Urls : string[]) => {
+  const handleAddImage = (Urls: string[]) => {
     setProduct({
       ...product,
-      assets: [...(product.assets || []), ...Urls.map((url) => ({ url, type: "IMAGE" as const }))],
+      assets: [
+        ...(product.assets || []),
+        ...Urls.map((url) => ({ url, type: "IMAGE" as const })),
+      ],
     });
     setIsUploadPopupOpen(false);
   };
@@ -234,14 +272,12 @@ export function AddProductForm() {
       }[];
       sizes: {
         size:
-          | "SIZE_5"
-          | "SIZE_6"
-          | "SIZE_7"
-          | "SIZE_8"
-          | "SIZE_9"
-          | "SIZE_10"
-          | "SIZE_11"
-          | "SIZE_12";
+          | "SIZE_36"
+          | "SIZE_38"
+          | "SIZE_40"
+          | "SIZE_42"
+          | "SIZE_44"
+          | "SIZE_46";
         stock: number;
       }[];
     }) => varientApi.addVarient(variant),
@@ -259,14 +295,12 @@ export function AddProductForm() {
             assets: variant.images,
             sizes: variant.sizes.map((size) => ({
               size: size.name as
-                | "SIZE_5"
-                | "SIZE_6"
-                | "SIZE_7"
-                | "SIZE_8"
-                | "SIZE_9"
-                | "SIZE_10"
-                | "SIZE_11"
-                | "SIZE_12",
+               "SIZE_36"
+              | "SIZE_38"
+              | "SIZE_40"
+              | "SIZE_42"
+              | "SIZE_44"
+              | "SIZE_46",
               stock: size.quantity,
             })),
           });
@@ -324,15 +358,19 @@ export function AddProductForm() {
                 placeholder="Enter product description"
               />
               {errors.description && (
-                <p className="text-red-500 text-xs mt-1">{errors.description}</p>
+                <p className="text-red-500 text-xs mt-1">
+                  {errors.description}
+                </p>
               )}
             </div>
           </div>
         </div>
-        
+
         {/* Media Section */}
         <div className="bg-white rounded-lg p-4 md:p-6 shadow-sm">
-          <h2 className="text-lg font-medium mb-3 md:mb-4 text-[#4f507f]">Media</h2>
+          <h2 className="text-lg font-medium mb-3 md:mb-4 text-[#4f507f]">
+            Media
+          </h2>
 
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 md:gap-4">
             {product.assets?.map((image, index) => (
@@ -363,10 +401,12 @@ export function AddProductForm() {
             <p className="text-red-500 text-xs mt-2">{errors.images}</p>
           )}
         </div>
-        
+
         {/* Pricing Section */}
         <div className="bg-white rounded-lg p-4 md:p-6 shadow-sm">
-          <h2 className="text-lg font-medium mb-3 md:mb-4 text-[#4f507f]">Pricing</h2>
+          <h2 className="text-lg font-medium mb-3 md:mb-4 text-[#4f507f]">
+            Pricing
+          </h2>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
             <div>
@@ -434,7 +474,7 @@ export function AddProductForm() {
             </div>
           </div>
         </div>
-        
+
         {/* Product Variants Section */}
         <div className="bg-white rounded-lg p-4 md:p-6 shadow-sm">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 md:mb-6 gap-3 sm:gap-0">
@@ -506,8 +546,7 @@ export function AddProductForm() {
                                 )
                               );
                             }}
-                            className="px-3 py-1.5 text-xs sm:text-sm bg-gray-100 text-gray-600 rounded-lg hover:bg-gray-200 mt-1 sm:mt-0"
-                          >
+                            className="px-3 py-1.5 text-xs sm:text-sm bg-gray-100 text-gray-600 rounded-lg hover:bg-gray-200 mt-1 sm:mt-0">
                             Back
                           </button>
                         </div>
@@ -691,7 +730,7 @@ export function AddProductForm() {
           </div>
         </div>
       </div>
-      
+
       {/* Sidebar section */}
       <div className="space-y-4 md:space-y-6">
         {/* Organization section */}
@@ -743,19 +782,19 @@ export function AddProductForm() {
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Material
+                SKU
               </label>
               <input
                 type="text"
                 className="w-full px-3 py-2 bg-white border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#4f507f] text-sm"
-                placeholder="Enter material"
-                value={product.material}
+                placeholder="Enter SKU"
+                value={product.sku}
                 onChange={(e) =>
-                  setProduct({ ...product, material: e.target.value })
+                  setProduct({ ...product, sku: e.target.value })
                 }
               />
-              {errors.material && (
-                <p className="text-red-500 text-xs mt-1">{errors.material}</p>
+              {errors.sku && (
+                <p className="text-red-500 text-xs mt-1">{errors.sku}</p>
               )}
             </div>
 
@@ -802,7 +841,7 @@ export function AddProductForm() {
             </div>
           </div>
         </div>
-        
+
         {/* Action buttons */}
         <div className="flex gap-2 sm:gap-3">
           <button
@@ -819,7 +858,7 @@ export function AddProductForm() {
           </button>
         </div>
       </div>
-      
+
       {/* Popups */}
       {isUploadPopupOpen && (
         <MultiUploadPopup
